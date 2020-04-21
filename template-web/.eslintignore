@@ -1,0 +1,4 @@
+vue.config.js
+mock/*
+build/*
+src/assets/*

@@ -1,0 +1,64 @@
+{
+  "name": "template-web",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Mithrandir <dxf1994@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "vue",
+    "element-ui"
+  ],
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "serve:open": "vue-cli-service serve --open",
+    "start": "npm run serve:open",
+    "build": "vue-cli-service build --report",
+    "preview": "node build/index.js --preview --report",
+    "lint": "vue-cli-service lint",
+    "inspect": "vue-cli-service inspect"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "core-js": "^3.6.5",
+    "dayjs": "^1.8.24",
+    "echarts": "^4.7.0",
+    "element-ui": "^2.13.0",
+    "lodash": "^4.17.15",
+    "nprogress": "^0.2.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.6",
+    "vuex": "^3.1.3"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.3.1",
+    "@vue/cli-plugin-eslint": "~4.3.1",
+    "@vue/cli-plugin-router": "~4.3.1",
+    "@vue/cli-plugin-vuex": "~4.3.1",
+    "@vue/cli-service": "~4.3.1",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "chalk": "^4.0.0",
+    "compression-webpack-plugin": "^3.1.0",
+    "connect": "^3.7.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "lint-staged": "^9.5.0",
+    "mockjs": "^1.1.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.2",
+    "serve-static": "^1.14.1",
+    "tasksfile": "^5.1.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  }
+}
