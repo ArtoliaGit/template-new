@@ -9,7 +9,11 @@ import lombok.Getter;
 public enum ResultCodeEnum {
 
     OK(true, 200, "操作成功"),
-    NO_CONTENT(false, 201, "没有数据"),
+    NO_CONTENT(false, 204, "没有数据"),
+    BAD_REQUEST(false, 400, "请求参数有误"),
+    UNAUTHORIZED(false, 401, "请求需要验证"),
+    FORBIDDEN(false, 403, "禁止访问"),
+    NOT_FOUND(false, 404, "无法找到资源"),
     INTERNAL_SERVER_ERROR(false, 500, "服务错误");
 
     private final Boolean success;
