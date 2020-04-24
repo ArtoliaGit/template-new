@@ -27,6 +27,11 @@ public class Result implements Serializable {
      */
     private Object data;
 
+    /**
+     * 列表数据总数
+     */
+    private Long total;
+
     public Result error() {
         return this.message(ResultCodeEnum.INTERNAL_SERVER_ERROR.getMessage())
                 .code(ResultCodeEnum.INTERNAL_SERVER_ERROR.getCode());
@@ -49,6 +54,11 @@ public class Result implements Serializable {
 
     public Result data(Object data) {
         this.setData(data);
+        return this;
+    }
+
+    public Result total(Long total) {
+        this.setTotal(total);
         return this;
     }
 }

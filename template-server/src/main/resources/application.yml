@@ -31,18 +31,18 @@ spring:
 
 mybatis-plus:
   #  mapper-locations: classpath:com/bsoft/examination/mapper/*/*.xml
-  type-aliases-package: com.artolia.template.domain
+  type-aliases-package: com.bsoft.template.entity
   global-config:
-    banner: false
+    banner: true
     db-config:
       id-type: uuid
       insert-strategy: not_null
       update-strategy: not_null
-      logic-delete-value: 0
-      logic-not-delete-value: 1
+      logic-delete-value: 1
+      logic-not-delete-value: 0
   configuration:
     map-underscore-to-camel-case: true
-    cache-enabled: false
+    cache-enabled: true
     jdbc-type-for-null: 'null'
 
 swagger:
@@ -60,3 +60,7 @@ swagger:
     name: Authorization
     type: ApiKey
     key-name: Authorization
+
+
+custom:
+  default-password: 12345

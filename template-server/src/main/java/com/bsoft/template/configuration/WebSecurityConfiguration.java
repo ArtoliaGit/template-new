@@ -1,6 +1,7 @@
 package com.bsoft.template.configuration;
 
 import com.bsoft.template.service.auth.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Value("${spring.profiles.active}")
     private String profile;
+
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    @Autowired
+    private CustomHttp403ForbiddenEntryPoint customHttp403ForbiddenEntryPoint;
 
     private final UserService userService;
 
@@ -77,8 +84,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
                 .antMatchers(HttpMethod.DELETE).authenticated()
-                .antMatchers(HttpMethod.GET).authenticated();
+                .antMatchers(HttpMethod.GET).authenticated()
+                .and()
+                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler)
+                .and()
+                .exceptionHandling().authenticationEntryPoint(customHttp403ForbiddenEntryPoint);
 
         httpSecurity.headers().cacheControl();
+
     }
 }

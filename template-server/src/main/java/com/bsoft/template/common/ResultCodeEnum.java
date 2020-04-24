@@ -14,7 +14,8 @@ public enum ResultCodeEnum {
     UNAUTHORIZED(false, 401, "请求需要验证"),
     FORBIDDEN(false, 403, "禁止访问"),
     NOT_FOUND(false, 404, "无法找到资源"),
-    INTERNAL_SERVER_ERROR(false, 500, "服务错误");
+    INTERNAL_SERVER_ERROR(false, 500, "服务错误"),
+    SAVE_OR_UPDATE_FAIL(false, 20001, "保存失败");
 
     private final Boolean success;
 
