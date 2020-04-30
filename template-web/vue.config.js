@@ -38,6 +38,7 @@ module.exports = {
         },
       };
     }
+    return { devtool: 'source-map' };
   },
   devServer: {
     open: false,
