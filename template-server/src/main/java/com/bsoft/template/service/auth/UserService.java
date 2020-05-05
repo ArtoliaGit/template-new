@@ -6,8 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bsoft.template.common.Result;
 import com.bsoft.template.common.ResultCodeEnum;
 import com.bsoft.template.common.auth.UserInfo;
+import com.bsoft.template.entity.auth.Person;
 import com.bsoft.template.entity.auth.User;
+import com.bsoft.template.mapper.auth.PersonMapper;
+import com.bsoft.template.mapper.auth.RoleMapper;
 import com.bsoft.template.mapper.auth.UserMapper;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Map;
@@ -27,6 +32,12 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private PersonMapper personMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Autowired
     private UserInfo userInfo;
@@ -52,12 +63,12 @@ public class UserService implements UserDetailsService {
     /**
      * 获取用户列表
      */
-    public Result getUserList(Map<String, Object> params) {
+    public Result getUserList(Map<String, String> params) {
         Result result = new Result();
 
         Page<User> page = new Page<>(
-                Long.parseLong((String) params.getOrDefault("page", 1)),
-                Long.parseLong((String) params.getOrDefault("pageSize", 10))
+                Long.parseLong(params.getOrDefault("page", "1")),
+                Long.parseLong(params.getOrDefault("pageSize", "10"))
         );
 
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -105,23 +116,31 @@ public class UserService implements UserDetailsService {
     /**
      * 保存用户
      */
+    @Transactional
     public Result save(User user) {
         Result result = new Result();
         int num;
         if (user.getUserId() != null) {
             num = userMapper.updateById(user);
+            personMapper.updateById(user.getPerson());
         } else {
             if (userMapper.findByUsername(user.getUsername()) != null) {
                 result.setCode(ResultCodeEnum.SAVE_OR_UPDATE_FAIL.getCode());
                 result.setMessage("用户名已存在");
                 return result;
             }
+            Date now = new Date();
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            final String password = defaultPassword;
+            final String password = DigestUtils.md5Hex(defaultPassword);
             user.setPassword(encoder.encode(password));
-            user.setCreateTime(new Date());
+            user.setCreateTime(now);
             num = userMapper.insert(user);
+            user.getPerson().setUserId(user.getUserId());
+            user.getPerson().setCreateTime(now);
+            personMapper.insert(user.getPerson());
         }
+        roleMapper.deleteRoles(user);
+        roleMapper.saveRoles(user);
         if (num > 0) {
             result.code(ResultCodeEnum.OK.getCode()).message("保存成功");
         } else {
@@ -132,12 +151,32 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * 保存用户基本信息
+     * @param person 用户基本信息
+     * @return result
+     */
+    public Result savePerson(Person person) {
+        Result result = new Result();
+        if (person.getEmpId() == null) {
+            personMapper.insert(person);
+        } else {
+            personMapper.updateById(person);
+        }
+        return result.ok().message("保存成功");
+    }
+
+    /**
      * 删除用户
      */
     public Result remove(int userId) {
         Result result = new Result();
-        userMapper.deleteById(userId);
-        result.code(ResultCodeEnum.OK.getCode()).message("删除成功");
+        int num = userMapper.deleteById(userId);
+        if (num > 0) {
+            result.code(ResultCodeEnum.OK.getCode()).message("删除成功");
+        } else {
+            result.error().message("删除失败");
+        }
+
         return result;
     }
 
@@ -159,11 +198,16 @@ public class UserService implements UserDetailsService {
     public Result resetPassword(int userId) {
         Result result = new Result();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        final String password = defaultPassword;
+        final String password = DigestUtils.md5Hex(defaultPassword);
         User user = new User();
         user.setUserId(userId);
         user.setPassword(encoder.encode(password));
         userMapper.updateById(user);
         return result.ok();
+    }
+
+    public static void main(String[] args) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        System.out.println(DigestUtils.md5Hex("123"));
     }
 }

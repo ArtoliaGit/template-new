@@ -1,10 +1,18 @@
 package com.bsoft.template.service.auth;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bsoft.template.common.Result;
+import com.bsoft.template.common.ResultCodeEnum;
 import com.bsoft.template.entity.auth.Role;
 import com.bsoft.template.mapper.auth.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 角色业务类
@@ -19,35 +27,80 @@ public class RoleService {
     /**
      * 获取角色列表
      */
-    public Result getRoleList() {
-        return null;
+    public Result getRoleList(Map<String, String> params) {
+        Result result = new Result();
+
+        Page<Role> page = new Page<>(
+                Long.parseLong(params.getOrDefault("page", "1")),
+                Long.parseLong(params.getOrDefault("pageSize", "10"))
+        );
+
+        QueryWrapper<Role> wrapper = new QueryWrapper<>();
+        wrapper.allEq(params);
+        IPage<Role> iPage = roleMapper.selectPage(page, wrapper);
+
+        result.code(ResultCodeEnum.OK.getCode())
+                .message("查询成功")
+                .data(iPage.getRecords())
+                .total(iPage.getTotal());
+        return result;
     }
 
     /**
      * 根据用户获取角色
      */
     public Result getRolesByUser(int userId) {
-        return null;
+        List<Role> list = roleMapper.getRolesByUser(userId);
+        return new Result().ok().data(list);
     }
 
     /**
      * 根据角色id获取角色
      */
     public Result getRoleById(int roleId) {
-        return null;
+        Role role = roleMapper.selectById(roleId);
+        return new Result().ok().data(role);
     }
 
     /**
      * 保存角色
      */
     public Result save(Role role) {
-        return null;
+        Result result = new Result();
+        int num;
+        if (role.getRoleId() != null) {
+            num = roleMapper.updateById(role);
+        } else {
+            QueryWrapper<Role> wrapper = new QueryWrapper<>();
+            wrapper.eq("role_code", role.getRoleCode());
+            if (roleMapper.selectOne(wrapper) != null) {
+                result.setCode(ResultCodeEnum.SAVE_OR_UPDATE_FAIL.getCode());
+                result.setMessage("角色代码已存在");
+                return result;
+            }
+            role.setCreateTime(new Date());
+            num = roleMapper.insert(role);
+        }
+        if (num > 0) {
+            result.code(ResultCodeEnum.OK.getCode()).message("保存成功");
+        } else {
+            result.code(ResultCodeEnum.SAVE_OR_UPDATE_FAIL.getCode())
+                    .message(ResultCodeEnum.SAVE_OR_UPDATE_FAIL.getMessage());
+        }
+        return result;
     }
 
     /**
      * 删除角色
      */
-    public Result remove() {
-        return null;
+    public Result remove(int roleId) {
+        Result result = new Result();
+        int num = roleMapper.deleteById(roleId);
+        if (num > 0) {
+            result.ok().message("删除成功");
+        } else {
+            result.error().message("删除失败");
+        }
+        return result;
     }
 }

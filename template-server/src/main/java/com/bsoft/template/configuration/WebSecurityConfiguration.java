@@ -1,5 +1,7 @@
 package com.bsoft.template.configuration;
 
+import com.bsoft.template.common.exception.CustomAccessDeniedHandler;
+import com.bsoft.template.common.exception.CustomHttp403ForbiddenEntryPoint;
 import com.bsoft.template.service.auth.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

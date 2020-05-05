@@ -9,6 +9,8 @@
         <result property="status" column="status" />
         <result property="createTime" column="create_time" />
         <result property="disableTime" column="disableTime" />
+        <association property="person" column="user_id"
+                     select="com.bsoft.template.mapper.auth.PersonMapper.getPersonById" />
         <collection property="roles" ofType="Role" column="user_id"
                     select="com.bsoft.template.mapper.auth.RoleMapper.getRolesByUser" />
     </resultMap>

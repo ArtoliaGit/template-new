@@ -3,7 +3,7 @@ server:
     max-threads: 300
   servlet:
     session:
-      timeout: 3600
+      timeout: 60m
 
 spring:
   profiles:
@@ -63,4 +63,4 @@ swagger:
 
 
 custom:
-  default-password: 12345
+  default-password: 123

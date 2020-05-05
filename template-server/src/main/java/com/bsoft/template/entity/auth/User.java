@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.*;
  */
 @Data
 @TableName(value = "user")
+//@JsonIgnoreProperties(value = "password", allowGetters = false, allowSetters = true)
 public class User implements UserDetails {
 
     /**
@@ -34,7 +36,7 @@ public class User implements UserDetails {
     /**
      * 密码
      */
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     /**
@@ -60,7 +62,14 @@ public class User implements UserDetails {
     @TableField(exist = false)
     private List<Role> roles;
 
+    /**
+     * 用户基本信息
+     */
+    @TableField(exist = false)
+    private Person person;
+
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : roles) {

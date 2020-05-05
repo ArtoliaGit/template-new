@@ -15,7 +15,8 @@ public enum ResultCodeEnum {
     FORBIDDEN(false, 403, "禁止访问"),
     NOT_FOUND(false, 404, "无法找到资源"),
     INTERNAL_SERVER_ERROR(false, 500, "服务错误"),
-    SAVE_OR_UPDATE_FAIL(false, 20001, "保存失败");
+    SAVE_OR_UPDATE_FAIL(false, 20001, "保存失败"),
+    SIGN_FAIL(false, -1, "验证签名失败");
 
     private final Boolean success;
 

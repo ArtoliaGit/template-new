@@ -1,7 +1,11 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
+import _ from 'lodash';
 import { Message } from 'element-ui';
 import { getTokenFromStorage } from '@/utils/common';
+import { encrypt, decrypt, md5 } from '@/utils/encrypt';
+import globalConfig from '@/config';
+import store from '@/store';
 
 class HttpRequest {
   constructor(baseUrl = '/') {
@@ -13,8 +17,8 @@ class HttpRequest {
    */
   getInitConfig() {
     const config = {
-      baseUrl: this.baseUrl,
-      timeout: 1000,
+      baseURL: this.baseUrl,
+      timeout: 30000,
       headers: {
         // TODO 加入请求头配置
       },
@@ -42,15 +46,27 @@ class HttpRequest {
      * @description 响应拦截
      */
     instance.interceptors.response.use((res) => {
-      const { data, status } = res;
+      const { data } = res;
+      if (globalConfig.SECRET_FLAG && data.data) {
+        data.data = decrypt(data.data);
+      }
+      console.log(res.config.url, data);
       return data;
     }, (error) => {
       const errorInfo = error.response;
-      Message({
-        message: '服务错误',
-        type: 'error',
-        duration: 5 * 1000,
-      });
+      if (errorInfo.status === 404) {
+        Message.error(`接口${errorInfo.config.url}没有找到`);
+      } else if (errorInfo.status >= 500) {
+        Message({
+          message: '服务错误',
+          type: 'error',
+          duration: 5 * 1000,
+        });
+      } else if (errorInfo.status === 403) {
+        store.dispatch('handleLogout');
+        Message.error('请重新登录');
+      }
+
       this.addErrorLog(errorInfo);
       return Promise.reject(error);
     });
@@ -70,7 +86,7 @@ class HttpRequest {
       code: status,
       message: statusText,
       url: responseURL,
-      data: config.data && JSON.parse(config.data),
+      data: config.data,
       params: config.params,
     };
     console.log(info);
@@ -78,7 +94,38 @@ class HttpRequest {
 
   request(options) {
     const instance = axios.create();
+
     options = { ...this.getInitConfig(), ...options };
+
+    // 加密post请求的数据
+    if (globalConfig.SECRET_FLAG && options.method === 'post' && options.data) {
+      const secretData = encrypt(options.data);
+      options.data = {
+        secretData,
+      };
+    }
+
+    // 生成签名
+    if (globalConfig.SIGN_FLAG) {
+      const timeStamp = new Date().getTime();
+      const token = getTokenFromStorage();
+      let params = options.params || '';
+      let data = options.data || '';
+      if (params) {
+        params = Object.entries(params).map(item => `${item[0]}=${item[1]}`).join('&');
+      }
+      if (data && typeof (data) === 'object') {
+        data = JSON.stringify(data);
+      }
+      const signStr = md5(`${token}${params}${data}${timeStamp}`);
+      options = _.merge(options, {
+        headers: {
+          timeStamp,
+          sign: signStr,
+        },
+      });
+    }
+
     this.interceptors(instance);
     return instance(options);
   }

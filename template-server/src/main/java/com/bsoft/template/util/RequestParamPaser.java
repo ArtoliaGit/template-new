@@ -14,9 +14,9 @@ public class RequestParamPaser {
      * @param request 请求参数
      * @return map
      */
-    public static Map<String, Object> getParameters(HttpServletRequest request) {
+    public static Map<String, String> getParameters(HttpServletRequest request) {
         Map<String, String[]> map = request.getParameterMap();
-        Map<String, Object> result = new HashMap<>();
+        Map<String, String> result = new HashMap<>();
         for (Map.Entry<String, String[]> item : map.entrySet()) {
             if (item.getValue() != null && item.getValue().length >= 1) {
                 result.put(item.getKey(), item.getValue()[0]);

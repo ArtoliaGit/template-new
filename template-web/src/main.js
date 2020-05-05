@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import ElementUI from 'element-ui';
+import _ from 'lodash';
 
 import './styles/element-variables.scss'; // 引入element样式文件
 import './styles/index.scss';
@@ -10,11 +11,12 @@ import router from './router';
 import store from './store';
 
 /* eslint global-require: "off" */
-if (process.env.NODE_ENV !== 'production') require('../mock');
+// if (process.env.NODE_ENV !== 'production') require('../mock');
 
 Vue.use(ElementUI, {
-  size: 'medium',
+  size: 'small',
 });
+Vue.use(_);
 
 Vue.config.productionTip = false;
 

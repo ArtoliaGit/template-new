@@ -14,3 +14,10 @@ export function getUrlParams(url) {
   });
   return result;
 }
+
+/**
+ * @description 对象不为空
+ */
+export function isNotEmpty(obj) {
+  return obj !== undefined && obj !== null;
+}

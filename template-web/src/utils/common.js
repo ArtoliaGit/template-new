@@ -104,3 +104,31 @@ export function removeObjFromLocalStorage(key) {
 export function clearLocalStorage() {
   localStorage.clear();
 }
+
+/**
+ * 从路由中获取面包屑列表
+ * @param {Array} routes 路由列表
+ * @param {Array} paths 选择的菜单路径
+ */
+export function getBreadCrumbListByRouter(routes, paths) {
+  const getBreadCrumb = (routesVal, pathsVal) => {
+    let breadCrumbList = [];
+    routesVal.forEach((item) => {
+      if (pathsVal.includes(item.path)
+        && item.meta
+        && !item.meta.hideInBread) {
+        breadCrumbList.push({
+          name: item.name,
+          path: item.path,
+          icon: item.meta.icon || '',
+          title: item.meta.title || '',
+        });
+        if (item.children && item.children.length > 0) {
+          breadCrumbList = breadCrumbList.concat(getBreadCrumb(item.children, pathsVal));
+        }
+      }
+    });
+    return breadCrumbList;
+  };
+  return getBreadCrumb(routes, paths);
+}

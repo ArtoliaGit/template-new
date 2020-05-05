@@ -1,4 +1,4 @@
-package com.bsoft.template.configuration;
+package com.bsoft.template.common.exception;
 
 import com.bsoft.template.common.Result;
 import lombok.extern.slf4j.Slf4j;

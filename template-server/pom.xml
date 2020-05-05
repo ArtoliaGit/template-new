@@ -21,7 +21,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <mybatis-plus.version>3.3.1.tmp</mybatis-plus.version>
-        <easyexcel.version>2.1.7</easyexcel.version>
+        <easyexcel.version>2.2.3</easyexcel.version>
         <commons-io.version>2.6</commons-io.version>
         <commons-fileupload.version>1.4</commons-fileupload.version>
         <java-uuid-generator.version>4.0.1</java-uuid-generator.version>
@@ -115,6 +115,10 @@
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>orai18n</artifactId>
         </dependency>-->
 
         <!-- Lombok -->
@@ -135,6 +139,12 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
+        </dependency>
+
+        <!-- commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
         </dependency>
 
         <!-- gson json工具库 -->
@@ -296,6 +306,7 @@
             </plugin>-->
             <!-- 允许springboot用${}获取maven变量 -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
                     <encoding>UTF-8</encoding>

@@ -58,6 +58,7 @@
 <script>
 import { debounce } from 'lodash';
 import { mapActions } from 'vuex';
+import CryptoJS from 'crypto-js';
 
 export default {
   name: 'PasswordLogin',
@@ -85,14 +86,30 @@ export default {
   methods: {
     ...mapActions(['handleLogin', 'handleGetUserInfo']),
     handleSubmit: debounce(function anonymous() {
-      // TODO 登录事件
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.handleLogin(this.form).then(() => {
+          const data = {
+            username: this.form.username,
+            password: CryptoJS.MD5(this.form.password).toString(),
+          };
+          const loading = this.$loading({
+            lock: true,
+            text: '正在登录...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.1)',
+            customClass: 'loading',
+          });
+          this.handleLogin(data).then(() => {
+            loading.close();
             this.$message.success('登录成功');
             this.handleGetUserInfo().then(() => {
-              this.$router.push({ name: 'Login' });
+              this.$router.push({ name: 'Home' });
+            }).catch(e => {
+              this.$message.error(e.message);
             });
+          }).catch(e => {
+            loading.close();
+            this.$message.error(e.message);
           });
         }
       });
@@ -150,6 +167,20 @@ export default {
   font-weight: bold;
   span>span:first-child {
     letter-spacing: 50px;
+  }
+}
+</style>
+
+<style lang="scss">
+.loading {
+  .el-loading-spinner {
+    margin-top: -50px!important;
+  }
+  .el-icon-loading {
+    font-size: 50px;
+  }
+  .el-loading-text {
+    font-size: 20px;
   }
 }
 </style>

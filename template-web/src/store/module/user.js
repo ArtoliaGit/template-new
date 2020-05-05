@@ -1,10 +1,17 @@
 import { login, logout, getUserInfo } from '@/api/user';
+import {
+  setTokenToStorage,
+  clearSessionStorage,
+  clearLocalStorage,
+} from '@/utils/common';
+import router from '@/router';
 
 export default {
   state: {
     username: '',
     userId: '',
     token: '',
+    hasUserInfo: false,
   },
   mutations: {
     setUsername(state, username) {
@@ -15,6 +22,10 @@ export default {
     },
     setToken(state, token) {
       state.token = token;
+      setTokenToStorage(token);
+    },
+    setHasUserInfo(state, hasUserInfo) {
+      state.hasUserInfo = hasUserInfo;
     },
   },
   actions: {
@@ -24,16 +35,13 @@ export default {
     handleLogin({ commit }, { username, password }) {
       return new Promise((resolve, reject) => {
         login({ username, password }).then(res => {
-          console.log({ res });
           if (res.code === 200) {
-            console.log('登录成功');
-            commit('setToken', res.data.token);
+            commit('setToken', res.data);
             resolve(res);
           } else {
             reject(res);
           }
         }).catch(e => {
-          console.log('登录失败');
           reject(e);
         });
       });
@@ -42,8 +50,10 @@ export default {
      * @description 退出登录
      */
     handleLogout({ commit }) {
-      console.log('退出登录');
       commit('setToken', '');
+      clearSessionStorage();
+      clearLocalStorage();
+      router.push({ name: 'Login' });
     },
     /**
      * @description 获取个人信息
@@ -52,6 +62,14 @@ export default {
       return new Promise((resolve, reject) => {
         getUserInfo().then(res => {
           // TODO 获取个人信息
+          if (res.code === 200) {
+            commit('setUserId', res.userId);
+            commit('setUsername', res.username);
+            commit('setHasUserInfo', true);
+            resolve();
+          } else {
+            reject(res);
+          }
         });
       });
     },
