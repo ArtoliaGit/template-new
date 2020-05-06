@@ -42,6 +42,11 @@ public class Result implements Serializable {
                 .code(ResultCodeEnum.OK.getCode());
     }
 
+    public Result fail() {
+        return this.message(ResultCodeEnum.FAIL.getMessage())
+                .code(ResultCodeEnum.FAIL.getCode());
+    }
+
     public Result message(String message) {
         this.setMessage(message);
         return this;

@@ -47,6 +47,11 @@ public class Menu {
     private String link;
 
     /**
+     * 菜单排序
+     */
+    private Integer sort;
+
+    /**
      * 父菜单id
      */
     private Integer parentId;
