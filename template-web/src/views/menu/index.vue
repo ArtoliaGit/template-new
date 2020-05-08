@@ -204,6 +204,9 @@ export default {
         activite: 1,
         create_time: '',
       };
+      this.$nextTick(() => {
+        this.$refs.form.clearValidate();
+      });
     },
     getTreeData() {
       const params = {
@@ -234,6 +237,7 @@ export default {
           save(this.form).then(res => {
             if (res.code === 200) {
               this.$message.success('保存成功');
+              this.form.id = res.data.id;
               this.getTreeData();
             } else {
               this.$message.error('保存失败');
@@ -243,14 +247,20 @@ export default {
       });
     },
     removeNode() {
-      remove({ id: this.currentNode.id }).then(res => {
-        if (res.code === 200) {
-          this.getTreeData();
-          this.$message.success('删除成功');
-        } else {
-          this.$message.error('删除失败');
-        }
-      });
+      this.$confirm('是否删除菜单？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).then(() => {
+        remove({ id: this.currentNode.id }).then(res => {
+          if (res.code === 200) {
+            this.getTreeData();
+            this.$message.success('删除成功');
+          } else {
+            this.$message.error('删除失败');
+          }
+        });
+      }).catch(() => {});
     },
   },
 };

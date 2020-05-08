@@ -25,3 +25,25 @@ html {
 *:after {
   box-sizing: inherit;
 }
+
+.el-pagination {
+  margin-top: 10px;
+  float: right;
+}
+.filter-container {
+  padding-bottom: 10px;
+  text-align: left;
+  .filter-item {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
+  }
+}
+
+.el-table th {
+  background: #f8f8f9;
+  color: #515a6e;
+}
+.el-table__body tr.current-row > td {
+  background-color: #e8f4ff;
+}

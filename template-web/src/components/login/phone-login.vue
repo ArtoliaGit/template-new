@@ -14,12 +14,14 @@
           <el-input
             v-model="form.phone"
             placeholder="请输入常用手机号"
+            size="medium"
           >
             <el-select
               v-model="form.country"
               slot="prepend"
               placeholder=""
               style="width: 120px;"
+              size="medium"
             >
               <el-option
                 v-for="item in countryList"
@@ -34,12 +36,14 @@
           <el-input
             v-model="form.valicode"
             placeholder="请输入验证码"
+            size="medium"
           >
             <el-button
               slot="append"
               @click="handleValicode"
               :class="{ 'valicode-btn': !disableGetCode }"
               :disabled="disableGetCode"
+              size="medium"
             >
               <span class="valicode-text">{{ valicodeText }}</span>
             </el-button>
@@ -50,6 +54,7 @@
             type="primary"
             class="login-button"
             @click.native.prevent="handleSubmit"
+            size="medium"
           >
             <span>登</span><span>录</span>
           </el-button>

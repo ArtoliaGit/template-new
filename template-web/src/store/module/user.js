@@ -6,13 +6,18 @@ import {
 } from '@/utils/common';
 import router from '@/router';
 
+const getDefaultState = () => ({
+  username: '',
+  userId: '',
+  token: '',
+  role: null,
+  roleList: [],
+  personName: '',
+  hasUserInfo: false,
+});
+
 export default {
-  state: {
-    username: '',
-    userId: '',
-    token: '',
-    hasUserInfo: false,
-  },
+  state: getDefaultState(),
   mutations: {
     setUsername(state, username) {
       state.username = username;
@@ -26,6 +31,15 @@ export default {
     },
     setHasUserInfo(state, hasUserInfo) {
       state.hasUserInfo = hasUserInfo;
+    },
+    setRole(state, role) {
+      state.role = role;
+    },
+    setRoleList(state, roleList) {
+      state.roleList = roleList;
+    },
+    resetUserState(state) {
+      Object.assign(state, getDefaultState());
     },
   },
   actions: {
@@ -53,19 +67,31 @@ export default {
       commit('setToken', '');
       clearSessionStorage();
       clearLocalStorage();
+      commit('resetUserState');
+      commit('resetAppState');
       router.push({ name: 'Login' });
     },
     /**
      * @description 获取个人信息
      */
-    handleGetUserInfo({ commit }) {
+    handleGetUserInfo({ commit, dispatch, rootState }) {
       return new Promise((resolve, reject) => {
         getUserInfo().then(res => {
           // TODO 获取个人信息
           if (res.code === 200) {
-            commit('setUserId', res.userId);
-            commit('setUsername', res.username);
+            commit('setUserId', res.data.userId);
+            commit('setUsername', res.data.username);
             commit('setHasUserInfo', true);
+            commit('setRoleList', res.data.roles);
+            if (res.data.roles && res.data.roles.length > 0) {
+              commit('setRole', res.data.roles[0]);
+              if (res.data.roles[0].resource) {
+                dispatch('handleSetMenuList', res.data.roles[0].resource);
+              }
+            }
+            if (res.data.person) {
+              commit('personName', res.data.person.personName);
+            }
             resolve();
           } else {
             reject(res);

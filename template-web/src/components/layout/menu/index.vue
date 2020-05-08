@@ -12,7 +12,7 @@
       :default-active="routeIndex"
       :unique-opened="false"
     >
-      <sub-menu v-for="item in menuList" :key="item.name" :submenu="item" />
+      <sub-menu v-for="item in menuList" :key="item.id" :submenu="item" />
     </el-menu>
   </el-scrollbar>
 </template>
@@ -33,30 +33,15 @@ export default {
   },
   data() {
     return {
-      routeIndex: '1-4-1',
-      menuList: [
-        {
-          name: 'System',
-          path: '/system',
-          icon: 'el-icon-eleme',
-          title: '系统管理',
-          children: [
-            {
-              name: 'MenuManage',
-              path: '/system/menuManage',
-              icon: 'el-icon-eleme',
-              title: '菜单维护',
-            },
-            {
-              name: 'Link',
-              path: '/system/link',
-              icon: 'el-icon-eleme',
-              title: '百度',
-            },
-          ],
-        },
-      ],
     };
+  },
+  computed: {
+    menuList() {
+      return this.$store.state.app.menuList;
+    },
+    routeIndex() {
+      return this.$route.path;
+    },
   },
   mounted() {
 

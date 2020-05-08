@@ -8,17 +8,44 @@
         <result property="roleDescription" column="role_description" />
         <result property="createTime" column="create_time" />
         <result property="status" column="status" />
+        <collection property="resource" column="{role_id=role_id,role_code=role_code}" ofType="Menu" select="getResource" />
     </resultMap>
     <select id="getRolesByUser" parameterType="string" resultMap="roleMap">
         select a.* from role a, user_roles b where a.role_id = b.role_id and b.user_id = #{user_id} and a.status = 1
     </select>
+    <select id="getRoleList" parameterType="map" resultMap="roleMap">
+        select * from role
+        <where>
+            <if test='params.roleName != null and params.roleName != ""'>
+                role_name like #{params.roleName}
+            </if>
+        </where>
+    </select>
     <insert id="saveRoles">
         insert user_roles(user_id, role_id)
         <foreach collection="roles" item="item" index="index" separator="union all">
-            select #{userId,jdbcType=VARCHAR}, #{item.roleId,jdbcType=VARCHAR}
+            select #{userId,jdbcType=INTEGER}, #{item.roleId,jdbcType=INTEGER}
         </foreach>
     </insert>
     <delete id="deleteRoles">
-        delete from user_roles where user_id = #{userId,jdbcType=VARCHAR}
+        delete from user_roles where user_id = #{userId,jdbcType=INTEGER}
+    </delete>
+    <select id="getResource" resultType="Menu">
+        <if test="role_code == 'admin'">
+            select * from menu where activite = 1;
+        </if>
+        <if test="role_code != 'admin'">
+            select m.* from role_menus a left join menu m on a.menu_id = m.id
+            where role_id = #{role_id} and activite = 1
+        </if>
+    </select>
+    <insert id="saveResource" parameterType="Role">
+        insert into role_menus(role_id, menu_id, create_time)
+        <foreach collection="resource" item="item" index="index" separator="union all">
+            select #{roleId,jdbcType=INTEGER}, #{item.id,jdbcType=INTEGER}, now()
+        </foreach>
+    </insert>
+    <delete id="removeResource" parameterType="int">
+        delete from role_menus where role_id = #{roleId}
     </delete>
 </mapper>

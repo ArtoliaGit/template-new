@@ -14,6 +14,7 @@
           <el-input
             v-model="form.username"
             placeholder="请输入用户名"
+            size="medium"
           >
             <template slot="prepend">
               <i class="el-icon-user-solid" />
@@ -25,6 +26,7 @@
             v-model="form.password"
             placeholder="请输入密码"
             :type="hidePassword ? 'password' : 'text'"
+            size="medium"
           >
             <template slot="prepend">
               <i class="el-icon-lock" />
@@ -46,6 +48,7 @@
             type="primary"
             class="login-button"
             @click.native.prevent="handleSubmit"
+            size="medium"
           >
             <span>登</span><span>录</span>
           </el-button>

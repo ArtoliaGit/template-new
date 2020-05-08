@@ -2,11 +2,10 @@
   <div>
     <el-menu-item
       :index="submenu.path"
-      :key="submenu.name"
       class="menu-item"
       v-if="!submenu.children || submenu.children.length === 0"
     >
-      <i :class="submenu.icon" />
+      <i :class="submenu.icon || 'el-icon-eleme'" />
       <span slot="title">{{ submenu.title }}</span>
     </el-menu-item>
     <el-submenu
@@ -22,7 +21,7 @@
         <i :class="submenu.icon" />
         <span>{{ submenu.title }}</span>
       </template>
-      <sub-menu v-for="item in submenu.children" :key="item.name" :submenu="item" />
+      <sub-menu v-for="item in submenu.children" :key="item.id" :submenu="item" />
     </el-submenu>
   </div>
 </template>

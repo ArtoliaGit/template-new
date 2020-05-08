@@ -50,7 +50,11 @@ class HttpRequest {
       if (globalConfig.SECRET_FLAG && data.data) {
         data.data = decrypt(data.data);
       }
-      console.log(res.config.url, data);
+      console.log('[response] =====> ', res.config.url, '\n', data);
+
+      if (data.code >= 500 && data.message) {
+        Message.error(data.message);
+      }
       return data;
     }, (error) => {
       const errorInfo = error.response;
@@ -96,6 +100,7 @@ class HttpRequest {
     const instance = axios.create();
 
     options = { ...this.getInitConfig(), ...options };
+    console.log('[request] =====> ', options.url, '\n', options);
 
     // 加密post请求的数据
     if (globalConfig.SECRET_FLAG && options.method === 'post' && options.data) {

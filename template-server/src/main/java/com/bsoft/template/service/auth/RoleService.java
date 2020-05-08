@@ -9,6 +9,7 @@ import com.bsoft.template.entity.auth.Role;
 import com.bsoft.template.mapper.auth.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -35,9 +36,7 @@ public class RoleService {
                 Long.parseLong(params.getOrDefault("pageSize", "10"))
         );
 
-        QueryWrapper<Role> wrapper = new QueryWrapper<>();
-        wrapper.allEq(params);
-        IPage<Role> iPage = roleMapper.selectPage(page, wrapper);
+        IPage<Role> iPage = roleMapper.getRoleList(page, params);
 
         result.code(ResultCodeEnum.OK.getCode())
                 .message("查询成功")
@@ -101,6 +100,25 @@ public class RoleService {
         } else {
             result.error().message("删除失败");
         }
+        return result;
+    }
+
+    /**
+     * 保存角色菜单配置
+     * @param role 角色实体
+     * @return Result
+     */
+    @Transactional
+    public Result saveResource(Role role) {
+        Result result = new Result();
+
+        if (role.getRoleId() != null) {
+            roleMapper.removeResource(role.getRoleId());
+        }
+        if (role.getResource() != null && role.getResource().size() > 0) {
+            roleMapper.saveResource(role);
+        }
+        result.ok().message("保存成功");
         return result;
     }
 }

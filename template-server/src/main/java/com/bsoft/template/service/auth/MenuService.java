@@ -32,7 +32,7 @@ public class MenuService {
             num = menuMapper.updateById(menu);
         }
         if (num > 0) {
-            result.ok().message("保存成功");
+            result.ok().message("保存成功").data(menu);
         } else {
             result.code(ResultCodeEnum.SAVE_OR_UPDATE_FAIL.getCode())
                 .message(ResultCodeEnum.SAVE_OR_UPDATE_FAIL.getMessage());
