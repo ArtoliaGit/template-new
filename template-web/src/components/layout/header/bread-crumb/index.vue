@@ -28,11 +28,13 @@ export default {
   watch: {
     $route(newRoute) {
       const paths = newRoute.matched.map(item => item.path);
+      paths.splice(-1, 1, newRoute.path);
       this.$store.dispatch('handleBreadCrumbList', paths);
     },
   },
   mounted() {
     const paths = this.$route.matched.map(item => item.path);
+    paths.splice(-1, 1, this.$route.path);
     this.$store.dispatch('handleBreadCrumbList', paths);
   },
 };

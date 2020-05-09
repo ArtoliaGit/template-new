@@ -115,13 +115,12 @@ export function getBreadCrumbListByRouter(routes, paths) {
     let breadCrumbList = [];
     routesVal.forEach((item) => {
       if (pathsVal.includes(item.path)
-        && item.meta
-        && !item.meta.hideInBread) {
+        && !item.hideInBread) {
         breadCrumbList.push({
           name: item.name,
           path: item.path,
-          icon: item.meta.icon || '',
-          title: item.meta.title || '',
+          icon: item.icon || '',
+          title: item.title || '',
         });
         if (item.children && item.children.length > 0) {
           breadCrumbList = breadCrumbList.concat(getBreadCrumb(item.children, pathsVal));
@@ -131,4 +130,23 @@ export function getBreadCrumbListByRouter(routes, paths) {
     return breadCrumbList;
   };
   return getBreadCrumb(routes, paths);
+}
+
+/**
+ * 存储tagList到sessionStorage
+ * @param {Array} tagList
+ */
+export function setTagListToStorage(tagList) {
+  sessionStorage.setItem('tagList', JSON.stringify(tagList));
+}
+
+/**
+ * 从sessionStorage获取tagList
+ */
+export function getTagListByStorage() {
+  const tagList = sessionStorage.getItem('tagList');
+  if (tagList) {
+    return JSON.parse(tagList);
+  }
+  return [];
 }

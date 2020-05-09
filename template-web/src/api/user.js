@@ -23,3 +23,33 @@ export const getUserInfo = params => http.get({
   url: '/user/getUserInfo',
   params,
 });
+
+export const getUserList = params => http.request({
+  url: '/user/getList',
+  params,
+  method: 'get',
+});
+
+export const save = data => http.request({
+  url: '/user/save',
+  data,
+  method: 'post',
+});
+
+export const remove = params => http.request({
+  url: '/user/remove',
+  params,
+  method: 'get',
+});
+
+export const resetPassword = data => http.request({
+  url: '/user/resetPassword',
+  data,
+  method: 'post',
+});
+
+export const getUserById = params => http.request({
+  url: '/user/getUserById',
+  params,
+  method: 'get',
+});

@@ -1,5 +1,4 @@
-import { getBreadCrumbListByRouter } from '@/utils/common';
-import routes from '@/router/routes';
+import { getBreadCrumbListByRouter, setTagListToStorage } from '@/utils/common';
 import config from '@/config';
 
 const getDefaultState = () => ({
@@ -8,6 +7,14 @@ const getDefaultState = () => ({
   isCollapse: false,
   breadCrumbList: [],
   cacheList: [],
+  tagList: [
+    {
+      path: config.homePage.path,
+      name: config.homePage.name,
+      title: config.homePage.title,
+      isClose: false,
+    },
+  ],
 });
 
 export default {
@@ -28,13 +35,17 @@ export default {
     setCacheList(state, name) {
       state.cacheList.push(name);
     },
+    setTagList(state, tagList) {
+      state.tagList = tagList;
+      setTagListToStorage(state.tagList);
+    },
     resetAppState(state) {
       Object.assign(state, getDefaultState());
     },
   },
   actions: {
-    handleBreadCrumbList({ commit }, paths) {
-      const breadCrumbList = getBreadCrumbListByRouter(routes, paths);
+    handleBreadCrumbList({ commit, state }, paths) {
+      const breadCrumbList = getBreadCrumbListByRouter(state.menuList, paths);
       breadCrumbList.unshift({
         ...config.homePage,
         to: { path: config.homePage.path },
@@ -54,6 +65,12 @@ export default {
       };
       const menuList = getStructData(resource, 0);
       commit('setMenuList', menuList);
+    },
+    handleCloseTag({ commit, state }, data) {
+      const tags = state.tagList.slice();
+      const index = state.tagList.findIndex(item => item.path === data);
+      tags.splice(index, 1);
+      commit('setTagList', tags);
     },
   },
 };

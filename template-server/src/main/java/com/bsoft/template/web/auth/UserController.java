@@ -66,4 +66,12 @@ public class UserController {
     public Result resetPassword(int userId) {
         return userService.resetPassword(userId);
     }
+
+    /**
+     * 根据用户id获取用户信息
+     */
+    @GetMapping("/getUserById")
+    public Result getUserById(int userId) {
+        return userService.getUserById(userId);
+    }
 }

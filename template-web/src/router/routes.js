@@ -47,10 +47,29 @@ const routes = [
         path: 'link/:id',
         name: 'Link',
         meta: {
-          title: '第三方页面',
+          title: '其他页面',
           icon: 'el-icon-eleme',
         },
         component: () => import('@/views/link'),
+      },
+      {
+        path: 'user',
+        name: 'User',
+        meta: {
+          title: '用户管理',
+          icon: 'el-icon-eleme',
+        },
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/user'),
+      },
+      {
+        path: 'userEdit',
+        name: 'UserEdit',
+        meta: {
+          title: '用户编辑',
+          icon: 'el-icon-eleme',
+          hideInMenu: true,
+        },
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/user-edit'),
       },
       {
         path: 'role',

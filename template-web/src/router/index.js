@@ -25,6 +25,7 @@ const turnTo = (to, next) => {
       to.meta.cache = resource.cache || to.meta.cache;
       to.meta.hideInBread = resource.hideInBread || to.meta.hideInBread;
       to.meta.hideInMenu = resource.hideInMenu || to.meta.hideInMenu;
+      to.meta.title = resource.title || to.meta.title;
     }
     if (to.meta.cache) {
       store.commit('setCacheList', to.name);
@@ -40,6 +41,9 @@ router.beforeEach((to, from, next) => {
   const token = getTokenFromStorage();
   if (token && to.name === 'Login') {
     next('/');
+    if (from.name === 'Home') {
+      NProgress.done();
+    }
   } else if (token && !store.state.user.hasUserInfo) {
     store.dispatch('handleGetUserInfo').then(res => {
       turnTo(to, next);

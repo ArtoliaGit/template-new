@@ -9,7 +9,10 @@
           <Header />
         </el-header>
         <el-main>
-          <main-content />
+          <tags-nav />
+          <div style="height: calc(100% - 40px); padding: 5px;">
+            <main-content />
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -20,6 +23,7 @@
 import MainContent from './content';
 import Menu from './menu';
 import Header from './header';
+import TagsNav from './tags-nav';
 
 export default {
   name: 'Layout',
@@ -27,6 +31,7 @@ export default {
     MainContent,
     Menu,
     Header,
+    TagsNav,
   },
   data() {
     return {
