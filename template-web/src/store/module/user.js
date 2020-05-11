@@ -38,6 +38,9 @@ export default {
     setRoleList(state, roleList) {
       state.roleList = roleList;
     },
+    setPersonName(state, personName) {
+      state.personName = personName;
+    },
     resetUserState(state) {
       Object.assign(state, getDefaultState());
     },
@@ -90,7 +93,7 @@ export default {
               }
             }
             if (res.data.person) {
-              commit('personName', res.data.person.personName);
+              commit('setPersonName', res.data.person.personName);
             }
             resolve();
           } else {

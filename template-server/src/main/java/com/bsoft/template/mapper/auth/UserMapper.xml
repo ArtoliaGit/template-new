@@ -25,4 +25,14 @@
     <select id="getUserById" resultMap="userMap">
         select * from user where user_id = #{userId}
     </select>
+
+    <select id="getUserList" parameterType="map"
+            resultMap="userMap">
+        select * from user
+        <where>
+            <if test='params.username != null and params.username != ""'>
+                username like #{params.username}
+            </if>
+        </where>
+    </select>
 </mapper>

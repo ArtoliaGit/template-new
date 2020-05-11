@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Button size="large" type="text" @click="backHome">返回首页</Button>
-    <Button size="large" type="text" @click="backPrev">返回上一页({{ second }}s)</Button>
+    <el-button size="large" type="text" @click="backHome">返回首页</el-button>
+    <el-button size="large" type="text" @click="backPrev">返回上一页({{ second }}s)</el-button>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
   methods: {
     backHome() {
       this.$router.replace({
-        name: this.$config.homeName,
+        name: this.$config.homePage.name,
       });
     },
     backPrev() {

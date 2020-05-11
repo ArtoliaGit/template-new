@@ -58,7 +58,7 @@
                 重置密码
               </el-button>
               <el-button
-                type="primary"
+                type="danger"
                 size="mini"
                 @click="handleDelete(scope.row.userId)"
               >
@@ -200,17 +200,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-pagination {
-  margin-top: 10px;
-  float: right;
-}
-.filter-container {
-  padding-bottom: 10px;
-  text-align: left;
-  .filter-item {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 10px;
+.page {
+  height: 100%;
+  .el-card {
+    height: 100%;
   }
 }
 </style>

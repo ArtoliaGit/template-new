@@ -1,6 +1,5 @@
 package com.bsoft.template.service.auth;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bsoft.template.common.Result;
@@ -71,9 +70,7 @@ public class UserService implements UserDetailsService {
                 Long.parseLong(params.getOrDefault("pageSize", "10"))
         );
 
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.allEq(params);
-        IPage<User> iPage = userMapper.selectPage(page, wrapper);
+        IPage<User> iPage = userMapper.getUserList(page, params);
 
         result.code(ResultCodeEnum.OK.getCode())
                 .message("查询成功")
@@ -122,7 +119,12 @@ public class UserService implements UserDetailsService {
         int num;
         if (user.getUserId() != null) {
             num = userMapper.updateById(user);
-            personMapper.updateById(user.getPerson());
+            if (user.getPerson().getEmpId() == null) {
+                user.getPerson().setUserId(user.getUserId());
+                personMapper.insert(user.getPerson());
+            } else {
+                personMapper.updateById(user.getPerson());
+            }
         } else {
             if (userMapper.findByUsername(user.getUsername()) != null) {
                 result.setCode(ResultCodeEnum.SAVE_OR_UPDATE_FAIL.getCode());

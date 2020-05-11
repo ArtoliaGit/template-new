@@ -7,6 +7,8 @@
 <script>
 export default {
   name: 'Home',
+  mounted() {
+  },
   methods: {
     alert(text) {
       console.log(text);
