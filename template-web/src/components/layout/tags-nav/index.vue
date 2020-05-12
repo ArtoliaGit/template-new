@@ -102,9 +102,11 @@ export default {
     },
     handleCommand(command) {
       if (command === 'all') {
-        this.activePage = this.tagList[0].path;
         this.setTagList(this.tagList.slice(0, 1));
-        this.$router.push({ path: this.activePage });
+        if (this.activePage !== config.homePage.path) {
+          this.activePage = this.tagList[0].path;
+          this.$router.push({ path: this.activePage });
+        }
       } else if (command === 'other') {
         if (this.activePage === config.homePage.path) {
           this.setTagList(this.tagList.slice(0, 1));

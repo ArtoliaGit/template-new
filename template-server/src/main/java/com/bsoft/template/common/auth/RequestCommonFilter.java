@@ -12,15 +12,21 @@ import java.io.IOException;
 public class RequestCommonFilter implements Filter {
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        ServletRequest requestWrapper = new BodyReaderHttpServletRequestWrapper(httpServletRequest);
-        filterChain.doFilter(requestWrapper, servletResponse);
+        if (servletRequest.getContentType() == null ||
+                !servletRequest.getContentType().toLowerCase().startsWith("multipart/form-data")) {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+            ServletRequest requestWrapper = new BodyReaderHttpServletRequestWrapper(httpServletRequest);
+            filterChain.doFilter(requestWrapper, servletResponse);
+        } else {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
+
     }
 
     @Override

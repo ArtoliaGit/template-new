@@ -25,12 +25,12 @@ public class Constant {
     /**
      * 传输参数加密
      */
-    public final static SecurityModeEnum SECURITY_MODE = SecurityModeEnum.ALL_ENCRYPT;
+    public final static SecurityModeEnum SECURITY_MODE = SecurityModeEnum.NO_ENCRYPT;
 
     /**
      * 是否关闭验签
      */
-    public final static boolean CLOSE_SIGN = false;
+    public final static boolean CLOSE_SIGN = true;
 
     /**
      * 绕过验证

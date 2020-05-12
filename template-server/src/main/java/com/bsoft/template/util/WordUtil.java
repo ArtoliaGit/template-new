@@ -54,7 +54,7 @@ public class WordUtil {
      */
     public static void createWord(HttpServletResponse response, Map<String, Object> dataMap, String templateName, String fileName) {
         try {
-            Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
+            Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
             configuration.setDefaultEncoding("UTF-8");
             configuration.setClassForTemplateLoading(WordUtil.class, "/templates/");
             Template template = configuration.getTemplate(templateName);
