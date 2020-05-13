@@ -201,6 +201,12 @@
             <version>${cxf.version}</version>
         </dependency>
 
+        <!-- httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
         <!-- sql打印 -->
         <dependency>
             <groupId>p6spy</groupId>

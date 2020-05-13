@@ -6,9 +6,13 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import com.bsoft.template.common.Result;
 import com.bsoft.template.entity.Car;
 import com.bsoft.template.entity.ExcelDemo;
+import com.bsoft.template.util.GsonUtil;
+import com.bsoft.template.util.HttpUtil;
+import com.bsoft.template.util.RequestParamPaser;
 import com.bsoft.template.util.WordUtil;
 import com.bsoft.template.util.excel.ExcelUtil;
 import com.bsoft.template.util.jasper.JasperUtil;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
@@ -16,12 +20,11 @@ import net.sf.jasperreports.export.ExporterInput;
 import net.sf.jasperreports.export.OutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,9 +37,13 @@ import java.util.*;
  * @author Artolia Pendragon
  * @version 1.0.0
  */
+@Slf4j
 @RestController
 @RequestMapping("file")
 public class FileController {
+
+    @Autowired
+    private HttpUtil httpUtil;
 
     @PostMapping
     public Result upload(MultipartFile file) {
@@ -163,6 +170,33 @@ public class FileController {
         params.put("UserName", "战三");
 
         JasperUtil.createWord(response, report, params, cars, null);
+    }
+
+    @GetMapping("/http")
+    public void httptest() {
+        Map<String, String> map = new HashMap<>();
+        map.put("a", "1");
+        httpUtil.get("http://localhost:9090/file/gettest", Result.class, map);
+        ExcelDemo model1 = new ExcelDemo();
+        model1.setName("howie");
+        model1.setAge("19");
+        model1.setAddress("123456789");
+        model1.setEmail("123456789@gmail.com");
+        model1.setNumber(0.1245);
+        model1.setDate(new Date());
+        httpUtil.post("http://localhost:9090/file/posttest", Result.class, model1);
+    }
+
+    @GetMapping("/gettest")
+    public Result gettest(HttpServletRequest request) {
+        log.info(GsonUtil.objectToJson(RequestParamPaser.getParameters(request)));
+        return new Result().ok();
+    }
+
+    @PostMapping("/posttest")
+    public Result posttest(@RequestBody ExcelDemo demo) {
+        log.info(GsonUtil.objectToJson(demo));
+        return new Result().ok();
     }
 
     public List<ExcelDemo> getList() {

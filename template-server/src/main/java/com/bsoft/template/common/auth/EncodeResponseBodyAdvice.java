@@ -32,7 +32,7 @@ public class EncodeResponseBodyAdvice implements ResponseBodyAdvice<Result> {
     public Result beforeBodyWrite(Result body, MethodParameter methodParameter, MediaType mediaType, Class aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         try {
             log.info("方法method: 【{}】的出参: {}", methodParameter.getMethod().getName(), body);
-            if (body.getData() == null) {
+            if (body == null || body.getData() == null) {
                 return body;
             }
             if (Constant.SECURITY_MODE.equals(SecurityModeEnum.ALL_ENCRYPT)) {
