@@ -258,7 +258,7 @@ export default {
         roleName: '',
         roleCode: '',
         roleDescription: '',
-        status: '1',
+        status: 1,
         createTime: '',
         createUser: this.$store.state.user.userName,
         resource: [],
