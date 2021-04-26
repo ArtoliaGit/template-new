@@ -22,7 +22,7 @@
 
         <mybatis-plus.version>3.3.1.tmp</mybatis-plus.version>
         <easyexcel.version>2.2.3</easyexcel.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-fileupload.version>1.4</commons-fileupload.version>
         <java-uuid-generator.version>4.0.1</java-uuid-generator.version>
         <swagger.version>1.9.1.RELEASE</swagger.version>
